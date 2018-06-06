@@ -1,0 +1,272 @@
+// NOTES FOR HAPPY CODE LEARNING 
+
+/* FONTS */
+1.include this declaration in style.scss @import "fonts/fonts.scss";
+2.Copy the font files into 'fonts folder'
+3.declare variable $font-body: 'Ovrelock-Regular'; 
+4.define  @font-face {font-family: 'Amatic-Bold'; src: url('../fonts/amatic/Amatic-Bold.ttf') format('truetype');} in fonts.scss
+6.define font-family: $font-body; in theme.scss for body tag.
+
+/* Google FONTS */
+1. include this declaration in style.scss @import url("http://fonts.googleapis.com/css?family=Kalam:400,700&subset=latin,latin-ext");
+
+/* NEVER use this Rule on body or html 
+
+overflow: hidden - It removes the scroll bars! */ 
+
+/* COMPASS  */
+
+/* Box shadow with custom settings
+
+#box-shadow-custom {
+  @include box-shadow(red 2px 2px 10px);
+
+} */
+
+	/* 		Set the box-sizing for body element 
+	@include box-sizing(border-box); */
+
+/* Sprites */ 
+
+/* 
+1. Include all the icons in the folder images/icons.
+2. In style.scss include this @import "icons/*.png";
+3. Than in file.scss with icons sytlings -> @include all-icons-sprites;
+4.  get the image size like this
+$height: icons-sprite-height(home);
+$width: icons-sprite-width(home);
+
+5. style the container for sprites
+.post-icon {
+		width: $width;
+		height: $height;
+		display: inline-block;
+} 
+6. Finally extend the icons class
+.icons-image {
+	@extend .post-icon;
+}
+*/
+
+/* Gridpack */
+
+/*  Modular Scale example
+		h1 36.000px 	2.25em 
+			36/1.6 (golden ratio) = 2.25 
+			22.5/16 (base font size) = 1.406em
+
+			h1 {
+			font-size: 2.25em;
+			margin-bottom: 1.406em;
+			}
+*/
+/* include transition compass
+
+			@iclude transition-property(background);
+			@iclude transition-duration(.2s);
+			@iclude transition-timing-function(ease-in);
+
+*/
+
+ /* include transform compass
+
+		rotate (in widgets) 
+		@include transform(rotate(2deg)); 
+*/
+
+/* Enabling Support for Post Thumbnails
+	add_theme_support('post-thumbnails', array('post'));  */
+
+/* IMPORTANT LESSON FROM DROPDOWN MENU */
+The dropdown menu is located in header with the class "row". All rows have clearfix classes with overflow:hidden. It causest the dropdown menu invissible. To fix this I've found the solution. Instead usual clearfix, use the modern so called pie-clearfix, it looks like this: 
+@mixin pie-clearfix {
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+  @include has-layout;
+}
+
+/* Navigation copy 06.12 */
+.main-navigation {
+	clear: both;
+	display: block;
+	float: left;
+	width: 100%;
+	height: auto;
+	position: relative;
+	overflow: visible;
+
+	ul {
+		list-style: none;
+		margin: 0;
+		padding-left: 0;
+		z-index: 999;
+
+		ul {
+			
+			float: left;
+			position: absolute;
+			top: 1.5em;
+			left: -999em;
+			z-index: 9999;
+
+			ul {
+				left: -999em;
+				top: 0;
+				z-index: 99999;
+			}
+
+			li {
+				float: none;
+				display: block;
+
+				&:hover > ul {
+					top: 0;
+					left: 210px;
+					margin-left: 0;
+					display: block;
+					overflow: visible;
+				}
+			}
+
+			a {
+				width: 200px;
+			}
+
+			&:hover > a {
+				display: block;
+			}
+
+			a:hover {
+				display: block;
+			}
+		}
+
+		li:hover > ul {
+			left: 0;
+			background: lighten($color-dark-text,5%);
+		}
+	}
+	> li a {
+		display: block;
+	}
+
+	li {
+
+		float: left;
+		position: relative;
+
+		&:hover > a {
+			background: lighten($color-dark-text,5%);
+		}
+	}
+	a {
+		display: block;
+		text-decoration: none;
+		padding: 15px;
+		color: $color-light-text;
+		@include box-sizing(border-box);
+		@include transition-property(all);
+		@include transition-duration(.2s);
+		@include transition-timing-function(ease-in);
+
+	}
+
+/* Navigation copy second method 10.12 */
+.main-navigation {
+	width: 100%;
+	position: relative;
+	text-align: center;
+	background-color: adjust-lightness($color-light-text, -5);
+	background-color: rgba(0,0,0,.15);
+	font-size: 100%;
+	line-height: 1em;
+
+	/* Main menu items */
+	li {
+		display: inline-block;
+		position: relative;
+
+		/* Space out the links */
+		a {
+			padding: 1em;
+			display: block;
+		}
+
+    	/* Hide sub menus & sub-sub menus
+     	* Position *underneath* originating li (see ul ul below) */
+		ul, ul ul {
+			display: none;
+			position: absolute;
+			z-index: 999;
+			top: 100%;
+			left: 0;
+			width: 12em;
+			background: adjust-lightness($color-dark-text, -10);
+		}
+
+    	/* Position sub-subs to right of parent li */
+		ul ul {
+			left:100%;
+			top: 0;
+			background: adjust-lightness($color-dark-text, -15);
+		}
+
+	    /* Make sub & sub-sub li's fill parent ul
+     	* Add feint border to bottom to separate items */
+		li {
+			display: block;
+			border-bottom: 1px solid adjust-lightness($color-light-text, -8);
+		}
+	}
+
+	/* Highlight li on hover */
+	li:hover {
+		background-color: adjust-lightness($color-dark-text, -15);
+
+		/* Change anchor colour to highlighted text */
+		> a {
+			color: $color-light-text;
+			background: none;
+		}
+
+		/* Display subs and sub-subs on parent hover */
+		> ul {
+			display: block;
+		}
+
+  	}
+	li:hover ul a {
+		background-color: adjust-lightness($color-dark-text, -15);
+		border-right: 1px solid adjust-lightness($color-light-text, -8);
+	}
+	/* Don't display menus further than 3 deep in ul tree */
+	ul ul ul li:hover ul {
+		display: none;
+	}
+
+	/* Make sure no padding & margins round <ul>s.
+	 * Very likely to have been set in CSS for rest of site */
+	ul {
+		padding: 0;
+		margin: 0;
+	}
+
+}
+
+.menu > .menu-item-has-children a {
+	padding-right: 20px;
+}
+.menu > .menu-item-has-children::after {
+	content: "";
+	display: block;
+	border: 5px solid transparent;
+	border-top-color: #FFF;
+	position: absolute;
+	z-index: 1001;
+	right: 0;
+	top: 50%;
+	margin-top: -1px;
+}
